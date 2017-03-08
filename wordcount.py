@@ -2,12 +2,15 @@ import fileinput
 from collections import Counter
 from nltk import word_tokenize
 import string
+from nltk.corpus import stopwords
+
+stopwords = set(stopwords.words('english'))
 
 if __name__ == '__main__':
     wordCounter = Counter()
     for line in fileinput.input():
         words = word_tokenize(line.strip())
-        wordCounter.update(word for word in words if word not in string.punctuation)
+        wordCounter.update(word for word in words if word not in string.punctuation and word not in stopwords)
 
     for word, count in wordCounter.most_common(20):
         print("%s: %d" % (word, count))
