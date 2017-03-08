@@ -21,7 +21,7 @@ def word_is_valid(word):
 if __name__ == '__main__':
     wordCounter = Counter()
     for line in fileinput.input():
-        words = word_tokenize(line.strip())
+        words = word_tokenize(line.strip().lower())
         wordCounter.update(filter(word_is_valid, words))
 
     for word, count in wordCounter.most_common(20):
