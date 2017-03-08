@@ -1,6 +1,6 @@
 import fileinput
-from collections import Counter
-from nltk import word_tokenize
+from collections import defaultdict, Counter
+from nltk import word_tokenize, pos_tag
 import string
 from nltk.corpus import stopwords
 
@@ -19,10 +19,17 @@ def word_is_valid(word):
 
 
 if __name__ == '__main__':
-    wordCounter = Counter()
+    posWordCounter = defaultdict(Counter)
     for line in fileinput.input():
         words = word_tokenize(line.strip().lower())
-        wordCounter.update(filter(word_is_valid, words))
+        wordsWithPos = pos_tag(words)
+        for word, pos in wordsWithPos:
+            if word_is_valid(word):
+                posWordCounter[pos][word] += 1
 
-    for word, count in wordCounter.most_common(20):
-        print("%s: %d" % (word, count))
+    for pos, wordCounter in posWordCounter.items():
+        print("{}:".format(pos))
+        for word, count in wordCounter.most_common(5):
+            print("%s: %d" % (word, count), end=' ')
+        print()
+        print()
