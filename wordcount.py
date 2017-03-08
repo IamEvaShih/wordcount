@@ -7,6 +7,8 @@ from nltk.corpus import stopwords
 stopwords = set(stopwords.words('english'))
 stopwords.update(string.punctuation)
 
+posDict = dict(line.strip().split('\t') for line in open('posTable.txt'))
+
 
 def word_is_valid(word):
     if word in stopwords:
@@ -20,12 +22,13 @@ def word_is_valid(word):
 
 if __name__ == '__main__':
     posWordCounter = defaultdict(Counter)
+
     for line in fileinput.input():
         words = word_tokenize(line.strip().lower())
         wordsWithPos = pos_tag(words)
         for word, pos in wordsWithPos:
             if word_is_valid(word):
-                posWordCounter[pos][word] += 1
+                posWordCounter[posDict[pos]][word] += 1
 
     for pos, wordCounter in posWordCounter.items():
         print("{}:".format(pos))
